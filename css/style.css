@@ -1,21 +1,42 @@
 body{
+    background-color: bisque;
 }
 
-#top{
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    padding: 10px 20px;
+    background-color: burlywood;
+    border-bottom: 1px solid #333;
 }
-
-#logo{
+.logo img{
+    width: 100px;
+    height: auto;
 }
-
-#navbar{
+.navbar ul{
+    list-style: none;
+    display: flex;
+    gap: 20px;
 }
-
-#banner{
+.navbar ul li{
+    display: inline;
 }
-
-#container{
+.menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 4px;
 }
-
+.menu ul li a:hover {
+    background-color: #007BFF;
+    color: white;
+}
+.banner{
+}
+.container{
+}
 footer{
 }
 
