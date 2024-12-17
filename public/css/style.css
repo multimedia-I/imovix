@@ -98,12 +98,12 @@ h1, h2, h3, h4, h5, h6 {
     color: #555;
 }
 
-/* Sobre Nós */
+/* About Us */
 #about {
     background-color: #f8f9fa;
 }
 
-/* contacto */
+/* Contact Form */
 #contact .form-control {
     border-radius: 0.3rem;
 }
