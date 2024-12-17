@@ -19,4 +19,3 @@
 <hr>
 <h4>Frameworks</h4>
 <p>Bootstrap</p>
-<p>Fontawesome</p>
