@@ -25,8 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const formatedPrice = formatPrice(property.price);
                     const card = `
                         <div class="col-md-4 mb-4">
+                        <a href="details.html?id=${property.id}" class="text-decoration-none text-dark">
                             <div class="card h-100 shadow-sm">
-                                <img src="${property.thumbnail_path || 'images/default.jpg'}" 
+                                <img src="${property.thumbnail_path || 'images/default.webp'}" 
                                      class="card-img-top" 
                                      alt="${property.title}">
                                 <div class="card-body">
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <p><strong>Preço:</strong> ${formatedPrice}€</p>
                                 </div>
                             </div>
+                            </a>
                         </div>
                     `;
                     propertyCardsContainer.innerHTML += card;
@@ -143,5 +145,107 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("token");
         window.location.reload();
     }
-
 });
+
+//Carregar detalhes do imovel
+document.addEventListener("DOMContentLoaded", () => {
+    const detailsContainer = document.getElementById("property-details");
+
+    const loadPropertyDetails = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const propertyId = urlParams.get("id");
+
+        if (!propertyId) {
+            detailsContainer.innerHTML = "<p>Imóvel não encontrado.</p>";
+            return;
+        }
+
+        fetch(`http://localhost:3000/api/properties/${propertyId}`)
+            .then(response => response.json())
+            .then(property => {
+                const photos = property.photos ? property.photos.split(",") : [];
+                const photoGallery = photos.map(photo =>
+                    `<img src="${photo}" class="img-thumbnail mb-2" style="width: 150px; height: 100px;">`
+                ).join("");
+
+                detailsContainer.innerHTML = `
+                    <h2>${property.title}</h2>
+                    <p>${property.description}</p>
+                    <p><strong>Preço:</strong> € ${property.price}</p>
+                    <p><strong>Tipologia:</strong> ${property.typology}</p>
+                    <div class="d-flex flex-wrap">${photoGallery}</div>
+                `;
+            })
+            .catch(err => {
+                console.error("Erro ao carregar os detalhes do imóvel:", err);
+                detailsContainer.innerHTML = "<p>Erro ao carregar os detalhes do imóvel.</p>";
+            });
+    };
+
+    if (detailsContainer) {
+        loadPropertyDetails();
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const backgroundMusic = document.getElementById("background-music");
+    const soundIcon = document.getElementById("sound-icon");
+
+    const pauseMusic = "bi-volume-mute-fill";
+    const playMusic = "bi-volume-up-fill";
+
+    soundIcon.addEventListener("click", () => {
+        if (backgroundMusic.paused) {
+            backgroundMusic.play();
+            soundIcon.classList.remove(pauseMusic);
+            soundIcon.classList.add(playMusic);
+        } else {
+            backgroundMusic.pause();
+            soundIcon.classList.remove(playMusic);
+            soundIcon.classList.add(pauseMusic);
+        }
+    });
+});
+
+// Formulário de contacto
+document.addEventListener("DOMContentLoaded", () => {
+    const contactForm = document.getElementById("contact-form");
+    const contactMessage = document.getElementById("contact-message");
+
+    if (contactForm) {
+        contactForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                message: document.getElementById("message").value
+            };
+
+            fetch("http://localhost:3000/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        contactMessage.style.color = "green";
+                        contactMessage.textContent = "Mensagem enviada com sucesso!";
+                        contactForm.reset();
+                    } else {
+                        contactMessage.style.color = "red";
+                        contactMessage.textContent = "Erro: " + data.message;
+                    }
+                })
+                .catch(err => {
+                    console.error("Erro ao enviar o formulário:", err);
+                    contactMessage.style.color = "red";
+                    contactMessage.textContent = "Erro ao enviar a mensagem. Tente novamente mais tarde.";
+                });
+        });
+    }
+});
+

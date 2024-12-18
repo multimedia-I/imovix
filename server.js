@@ -39,7 +39,7 @@ app.get("/api/typologies", (req, res) => {
 
 // Imóveis em destaque
 app.get("/api/highlights", (req, res) => {
-    const query = "SELECT title, short_description, price, thumbnail_path FROM properties";
+    const query = "SELECT id, title, short_description, price, thumbnail_path FROM properties";
     db.query(query, (err, results) => {
         if (err) return res.status(500).send("Erro ao carregar imóveis.");
         res.json(results);
@@ -61,43 +61,91 @@ app.get("/api/properties", (req, res) => {
     });
 });
 
+// Detalhes do imovel
+app.get("/api/properties/:id", (req, res) => {
+    const propertyId = req.params.id;
+    const query = `
+        SELECT p.id, p.title, p.description, p.price, t.typology AS typology, 
+               GROUP_CONCAT(f.photo_path) AS photos
+        FROM properties p
+        LEFT JOIN typologies t ON p.typology_id = t.id
+        LEFT JOIN photos f ON p.id = f.property_id
+        WHERE p.id = ?
+        GROUP BY p.id, t.typology;
+    `;
+
+    db.query(query, [propertyId], (err, results) => {
+        if (err) return res.status(500).json({ error: "Erro ao carregar os detalhes do imóvel" });
+        if (results.length === 0) return res.status(404).json({ error: "Imóvel não encontrado" });
+
+        res.json(results[0]);
+    });
+});
+
 // Upload de imagens
 const upload = multer({ dest: "uploads/" });
 
-// User Registration
+// Registar um novo utilizador
 app.post("/api/register", (req, res) => {
     const { name, email, password } = req.body;
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-    db.query(sql, [name, email, hashedPassword], (err) => {
-        if (err) return res.status(500).send("Erro ao registrar utilizador");
-        res.status(200).send("Utilizador registado com sucesso!");
+
+    // Verificação dos campos obrigatórios
+    if (!name || !email || !password) {
+        return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios." });
+    }
+
+    // Verificar se o utilizador já existe
+    const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+    db.query(checkUserQuery, [email], (err, results) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: "Erro ao verificar o utilizador." });
+        }
+        if (results.length > 0) {
+            return res.status(400).json({ success: false, message: "Email já registado." });
+        }
+
+        // Encriptar a password
+        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        // Inserir o novo utilizador na base de dados
+        const insertUserQuery = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        db.query(insertUserQuery, [name, email, hashedPassword], (err) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: "Erro ao registar utilizador." });
+            }
+            return res.status(201).json({ success: true, message: "Utilizador registado com sucesso!" });
+        });
     });
 });
+
 
 // Login
 app.post("/api/login", (req, res) => {
     const { email, password } = req.body;
-    const sql = "SELECT * FROM users WHERE email = ?";
+    const query = "SELECT * FROM users WHERE email = ?";
     db.query(query, [email], (err, results) => {
-        if (err || results.length === 0) {
-            return res.status(401).send("Utilizador inválido");
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Erro ao verificar o utilizador." });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ success: false, message: "Email não registado." });
         }
 
         const user = results[0];
-        const passwordMatch = bcrypt.compareSync(password, user.password);
-
-        if (!passwordMatch) {
-            return res.status(401).send("Password incorreta");
+        const isPasswordValid = bcrypt.compareSync(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ success: false, message: "Password incorreta." });
         }
 
-        // Gera o token JWT
         const token = jwt.sign({ id: user.id, email: user.email }, "secret", { expiresIn: "1h" });
-        res.json({ token });
+
+        res.json({ success: true, message: "Login realizado com sucesso!", token });
     });
 });
 
-// New property
+// Novo Imovel
 app.post("/api/new-property", upload.array("fotos", 5), (req, res) => {
     const { title, description, price, typology_id } = req.body;
     const photos = req.files.map((file) => file.path);
@@ -108,7 +156,7 @@ app.post("/api/new-property", upload.array("fotos", 5), (req, res) => {
 
         // Guardar as fotos
         const photoSql = "INSERT INTO photos (property_id, photo_path) VALUES ?";
-        const photoValues = photos.map((photo) => [property_id, foto]);
+        const photoValues = photos.map((photo) => [property_id, photo]);
         db.query(photoSql, [photoValues], (err) => {
             if (err) return res.status(500).send("Erro ao guardar fotos");
             res.status(200).send("Imóvel adicionado com sucesso!");
@@ -118,4 +166,20 @@ app.post("/api/new-property", upload.array("fotos", 5), (req, res) => {
 
 app.listen(3000, () => {
     console.log("Servidor na porta 3000");
+});
+
+// Envio de formulário de contacto
+app.post("/api/contact", (req, res) => {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+        return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios." });
+    }
+
+    console.log("Mensagem de contacto recebida:");
+    console.log("Nome:", name);
+    console.log("Email:", email);
+    console.log("Mensagem:", message);
+
+    res.json({ success: true, message: "Mensagem enviada com sucesso!" });
 });

@@ -14,7 +14,18 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-3">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Imovix</a>
+            <!-- Música Ambiente -->
+            <audio id="background-music" autoplay loop>
+                <source src="audio/background-music.wav" type="audio/wav">
+                Seu browser não suporta áudio.
+            </audio>
+
+            <!-- Control de Audio -->
+            <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+                <i id="sound-icon" class="bi bi-volume-mute-fill"></i>
+            </div>
+
+            <a class="navbar-brand" href="index.html"><img class="logo" src="images/logo.svg" alt="Imovix Logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Menu">
                 <span class="navbar-toggler-icon"></span>
@@ -30,10 +41,10 @@
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#about">Sobre Nós</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contacto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-person"></i></a>
-                        <ul class="dropdown-menu" aria-labelledby="submenuLink">
-                            <li><a id="menu-login" class="dropdown-item" href="#">Login</a></li>
-                            <li><a id="menu-register" class="dropdown-item" href="#">Registar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i id="login-icon" class="bi bi-person"></i></a>
+                        <ul id="sub-menu-login" class="dropdown-menu" aria-labelledby="submenuLink">
+                            <li><a  class="dropdown-item" href="menu-login">Login</a></li>
+                            <li><a id="menu" class="dropdown-item" href="menu-register">Registar</a></li>
                         </ul>
                     </li>
                 </ul>
