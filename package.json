@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.5"
+  },
+  "name": "imovix",
+  "version": "1.0.0",
+  "description": "<img src=\"https://ipcb.pt/sites/default/files/ipcb_estcb.svg\" style=\"height:10%\"/> <h1>Imovix - Agência Imobiliária</h1> <h3>Trabalho Final - Multimédia 1</h3> <h5>Licenciatura em Informática e Multimédia</h5> <p>Rui Félix - 32011241</p> <hr> <h4>Resumo</h4> <p>Lorem Ipsum</p> <hr> <h4>Ferramentas e Tecnologias</h4> <p>JetBrains WebStorm</p> <p>NPM http-server</p> <hr> <h4>Linguagens</h4> <p>HTML</p> <p>CSS</p> <p>JavaScript</p> <p>SQL</p> <hr> <h4>Frameworks</h4> <p>Bootstrap</p> <p>Fontawesome</p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
