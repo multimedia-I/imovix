@@ -21,7 +21,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "db-p4ssW0rd!",
-    database: "imovix"
+    database: "therfxme_imovix"
 });
 
 db.connect((err) => {
