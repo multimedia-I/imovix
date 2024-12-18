@@ -38,10 +38,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Submenu */
+.nav-item {
+    position: relative;
+}
+
 .nav-item .dropdown-menu {
     display: none;
-    position: relative;
+    position: absolute;
     top: 100%;
+    left: 0;
     background: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -49,6 +54,11 @@ h1, h2, h3, h4, h5, h6 {
     min-width: 10rem;
     padding: 0;
     list-style: none;
+}
+
+.nav-item:hover > .dropdown-menu,
+.nav-item .dropdown-menu:hover {
+    display: block;
 }
 
 .nav-item .dropdown-menu .dropdown-item {
@@ -61,10 +71,6 @@ h1, h2, h3, h4, h5, h6 {
 .nav-item .dropdown-menu .dropdown-item:hover {
     background-color: #f8f9fa;
     color: #007bff;
-}
-
-.nav-item:hover > .dropdown-menu {
-    display: block;
 }
 
 /* Hero Section */
@@ -138,6 +144,30 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
     z-index: 998;
+}
+
+/* New property */
+#new-property-form {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#new-property h2 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+#new-property button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+}
+
+#new-property button:hover {
+    background-color: #0056b3;
 }
 
 /* Pop-up */

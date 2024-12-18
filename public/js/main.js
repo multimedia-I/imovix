@@ -1,6 +1,6 @@
 window.onload = copyright();
 
-function copyright()  {
+function copyright() {
     const copyrightYear = new Date().getFullYear();
     document.getElementById("copyright").innerHTML = copyrightYear + ' &copy; Copyright';
 }
@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const card = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
+                            <a href="details.html?id=${property.id}" class="text-decoration-none text-dark">
                                 <div class="card-body">
                                     <h5 class="card-title">${property.title}</h5>
                                     <h6 class="card-title">${property.typology}</h6>
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <p><strong>Preço:</strong> ${formatedPrice}€</p>
                                     <div class="d-flex flex-wrap">${gallery}</div>
                                 </div>
+                                </a>
                             </div>
                         </div>
                     `;
@@ -176,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ? `<div class="more-photos mb-2 me-2" style="width: 150px; height: 100px; 
                           display: flex; align-items: center; justify-content: center; 
                           background: #f0f0f0; cursor: pointer;" data-index="4">
-                          <span style="font-size: 1.5rem; font-weight: bold;">+${photos.length - 4}</span>
+                          <span style="font-size: 1.5rem; font-weight: bold;">+${photos.length - 3}</span>
                        </div>`
                     : "";
 

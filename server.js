@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import multer from "multer";
 import cors from "cors";
 import path from "path";
+import * as fs from "fs";
 import { fileURLToPath } from "url";
 
 const app = express();
@@ -26,6 +27,10 @@ const db = mysql.createConnection({
 db.connect((err) => {
     if (err) throw err;
     console.log("Conectado à base de dados.");
+});
+
+app.listen(3000, () => {
+    console.log("Servidor na porta 3000");
 });
 
 //Carrega as Tipologias
@@ -81,9 +86,6 @@ app.get("/api/properties/:id", (req, res) => {
         res.json(results[0]);
     });
 });
-
-// Upload de imagens
-const upload = multer({ dest: "uploads/" });
 
 // Registar um novo utilizador
 app.post("/api/register", (req, res) => {
@@ -145,27 +147,54 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+// Upload Fotos
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const tempPath = "uploads/temp";
+        fs.mkdirSync(tempPath, { recursive: true });
+        cb(null, tempPath);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
 // Novo Imovel
 app.post("/api/new-property", upload.array("fotos", 5), (req, res) => {
     const { title, description, price, typology_id } = req.body;
-    const photos = req.files.map((file) => file.path);
-    const sql = "INSERT INTO properties (title, description, price, typology_id) VALUES (?, ?, ?, ?)";
-    db.query(sql, [title, description, price, typology_id], (err, results) => {
-        if (err) return res.status(500).send("Erro ao adicionar imóvel");
-        const property_id = results.insertId;
 
-        // Guardar as fotos
+    if (!title || !description || !price || !typology_id) {
+        return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios." });
+    }
+
+    const sql = "INSERT INTO properties (title, short_description, description, price, typology_id) VALUES (?, ?, ?, ?)";
+    db.query(sql, [title, short_description, description, price, typology_id], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Erro ao registar o imóvel." });
+        }
+
+        const propertyId = result.insertId;
+
+        const photos = req.files.map(file => {
+            const newPath = `uploads/property${propertyId}/${path.basename(file.path)}`;
+            fs.renameSync(file.path, newPath);
+            return newPath;
+        });
+
         const photoSql = "INSERT INTO photos (property_id, photo_path) VALUES ?";
-        const photoValues = photos.map((photo) => [property_id, photo]);
+        const photoValues = photos.map(photo => [propertyId, photo]);
+
         db.query(photoSql, [photoValues], (err) => {
-            if (err) return res.status(500).send("Erro ao guardar fotos");
-            res.status(200).send("Imóvel adicionado com sucesso!");
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ success: false, message: "Erro ao guardar fotos." });
+            }
+            res.status(201).json({ success: true, message: "Imóvel registado com sucesso!" });
         });
     });
-});
-
-app.listen(3000, () => {
-    console.log("Servidor na porta 3000");
 });
 
 // Envio de formulário de contacto

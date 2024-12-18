@@ -1,50 +1,54 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const newPropertyForm = document.getElementById("new-property-form");
-    const messageContainer = document.getElementById("property-message");
+    const propertyForm = document.getElementById("new-property-form");
+    const propertyMessage = document.getElementById("property-message");
+    const typologySelect = document.getElementById("typology");
 
-    if (newPropertyForm) {
-        if (!isAuthenticated()) {
-            alert("Você precisa estar autenticado para registrar um imóvel.");
-            return;
-        }
-
-        newPropertyForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(newPropertyForm);
-            fetch("http://localhost:3000/api/new-property", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                },
-                body: formData
-            })
-                .then(response => response.text())
-                .then(message => {
-                    messageContainer.innerText = message;
-                    newPropertyForm.reset();
-                })
-                .catch(err => console.error("Erro ao registrar imóvel:", err));
-        });
-    }
-
-    function loadTypologies() {
+    const loadTypologies = () => {
         fetch("http://localhost:3000/api/typologies")
             .then(response => response.json())
-            .then(tipologies => {
-                const typologySelect = document.getElementById("typology");
-                tipologies.forEach(typology => {
-                    const option = document.createElement("option");
-                    option.value = typology.id;
-                    option.textContent = typology.tipo;
-                    typologySelect.appendChild(option);
-                });
+            .then(data => {
+                typologySelect.innerHTML = data.map(typology =>
+                    `<option value="${typology.id}">${typology.typology}</option>`
+                ).join("");
             })
-            .catch(err => console.error("Erro ao carregar tipologias:", err));
-    }
+            .catch(err => {
+                console.error("Erro ao carregar tipologias:", err);
+            });
+    };
 
-// Carregar tipologias ao iniciar
-    if (document.getElementById("typology")) {
-        loadTypologies();
+    if (typologySelect) loadTypologies();
+
+    if (propertyForm) {
+        propertyForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (!propertyForm.checkValidity()) {
+                propertyForm.classList.add("was-validated");
+                return;
+            }
+
+            const formData = new FormData(propertyForm);
+
+            fetch("http://localhost:3000/api/new-property", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        propertyMessage.textContent = "Imóvel registado com sucesso!";
+                        propertyMessage.style.color = "green";
+                        propertyForm.reset();
+                    } else {
+                        propertyMessage.textContent = "Erro: " + data.message;
+                        propertyMessage.style.color = "red";
+                    }
+                })
+                .catch(err => {
+                    console.error("Erro ao registar imóvel:", err);
+                    propertyMessage.textContent = "Erro ao registar imóvel. Tente novamente mais tarde.";
+                    propertyMessage.style.color = "red";
+                });
+        });
     }
 });

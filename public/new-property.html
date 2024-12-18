@@ -32,7 +32,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Início</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Imóveis</a>
                         <ul class="dropdown-menu" aria-labelledby="submenuLink">
                             <li><a class="dropdown-item" href="properties.html">Consultar Imóveis</a></li>
@@ -43,8 +43,8 @@
                     <li class="nav-item"><a class="nav-link" href="#contact">Contacto</a></li>
                     <li class="nav-item"><a class="nav-link" href="#"><i id="login-icon" class="bi bi-person"></i></a>
                         <ul id="sub-menu-login" class="dropdown-menu" aria-labelledby="submenuLink">
-                            <li><a  class="dropdown-item" href="menu-login">Login</a></li>
-                            <li><a id="menu" class="dropdown-item" href="menu-register">Registar</a></li>
+                            <li><a id="menu-login" class="dropdown-item" href="#">Login</a></li>
+                            <li><a id="menu-register" class="dropdown-item" href="#">Registar</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -57,39 +57,53 @@
 <!-- Hero Section -->
 <section class="hero bg-light">
     <div class="container text-center py-5">
-        <h1 class="display-4">Encontre a Casa dos Seus Sonhos</h1>
-        <p class="lead">Registe o seu imovel</p>
+        <h1 class="display-4">Registe o seu imovel</h1>
     </div>
 </section>
 
-<main class="container mt-5">
-    <form id="new-property-form" enctype="multipart/form-data">
-        <div>
-            <label for="title">Título:</label>
-            <input type="text" id="title" name="title" required>
-        </div>
-        <div>
-            <label for="description">Descrição:</label>
-            <textarea id="description" name="description" required></textarea>
-        </div>
-        <div>
-            <label for="price">Preço:</label>
-            <input type="number" id="price" name="price" required>
-        </div>
-        <div>
-            <label for="typology">Tipologia:</label>
-            <select id="typology" name="typology_id" required>
-                <!-- Tipologias carregadas dinamicamente -->
-            </select>
-        </div>
-        <div>
-            <label for="photos">Fotos (máx. 5):</label>
-            <input type="file" id="photos" name="fotos" accept="image/*" multiple required>
-        </div>
-        <button type="submit">Registar Imóvel</button>
-    </form>
-    <p id="property-message"></p>
-</main>
+<section id="new-property" class="py-5">
+    <div class="container">
+        <form id="new-property-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="title" class="form-label">Título:</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Título do imóvel" required>
+                <div class="invalid-feedback">Por favor, insira o título do imóvel.</div>
+            </div>
+            <div class="mb-3">
+                <label for="short_description" class="form-label">Descrição:</label>
+                <textarea class="form-control" id="short_description" name="description" rows="3" placeholder="Descrição curta do imóvel" required></textarea>
+                <div class="invalid-feedback">Por favor, insira a descrição do imóvel.</div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Descrição:</label>
+                <textarea class="form-control" id="description" name="description" rows="3" placeholder="Descrição do imóvel" required></textarea>
+                <div class="invalid-feedback">Por favor, insira a descrição do imóvel.</div>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Preço:</label>
+                <input type="number" class="form-control" id="price" name="price" placeholder="Preço do imóvel" required>
+                <div class="invalid-feedback">Por favor, insira o preço do imóvel.</div>
+            </div>
+            <div class="mb-3">
+                <label for="typology" class="form-label">Tipologia:</label>
+                <select id="typology" name="typology_id" class="form-select" required>
+                    <!-- Tipologias carregadas dinamicamente -->
+                </select>
+                <div class="invalid-feedback">Por favor, selecione a tipologia.</div>
+            </div>
+            <div class="mb-3">
+                <label for="photos" class="form-label">Fotos (máx. 5):</label>
+                <input type="file" class="form-control" id="photos" name="fotos" accept="image/*" multiple required>
+                <div class="invalid-feedback">Por favor, envie até 5 fotos do imóvel.</div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Registar Imóvel</button>
+            </div>
+        </form>
+        <p id="property-message" class="mt-4 text-center"></p>
+    </div>
+</section>
+
 <!-- Pop-ups de registo e login de utilizadores -->
 <div id="overlay" class="overlay"></div>
 

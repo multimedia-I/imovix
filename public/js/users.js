@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            // Capturar valores do formulário
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
 
@@ -89,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             loginPopup.style.display = "none";
                             overlay.style.display = "none";
                             loginMessage.textContent = "";
-                            window.location.reload(); // Recarregar a página
+                            window.location.reload();
                         }, 2000);
                     } else {
                         loginMessage.style.color = "red";
@@ -108,23 +107,23 @@ document.addEventListener("DOMContentLoaded", () => {
 // Verifica se existe um login
 document.addEventListener("DOMContentLoaded", () => {
 
-    const loginIcon = "bi-person"
-    const logoutIcon = "bi-person-slash"
+    const iconLogin = "bi-person"
+    const iconLogout = "bi-box-arrow-right"
 
     if (localStorage.getItem("token")) {
-        loginIcon.classList.remove(loginIcon);
-        loginIcon.classList.add(logoutIcon);
+        loginIcon.classList.remove(iconLogin);
+        loginIcon.classList.add(iconLogout);
         subMenuLogin.style.display = "none";
         menuLogin.href = "#";
-        menuLogin.addEventListener("click", (e) => {
+        loginIcon.addEventListener("click", (e) => {
             e.preventDefault();
             localStorage.removeItem("token");
             window.location.reload();
         });
         menuRegisterProperty.style.display = "block";
     } else {
-        loginIcon.classList.remove(logoutIcon);
-        loginIcon.classList.add(loginIcon);
+        loginIcon.classList.remove(iconLogout);
+        loginIcon.classList.add(iconLogin);
         menuLogin.href = "#";
         menuRegisterProperty.style.display = "none";
     }
