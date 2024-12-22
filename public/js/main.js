@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("http://localhost:3000/api/highlights") // Endpoint no backend para imóveis em destaque
             .then(response => response.json())
             .then(properties => {
-                propertyCardsContainer.innerHTML = ""; // Limpa a lista anterior
+                propertyCardsContainer.innerHTML = "";
                 properties.forEach(property => {
                     const formatedPrice = formatPrice(property.price);
                     const card = `

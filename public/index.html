@@ -38,7 +38,8 @@
                     <li class="nav-item"><a class="nav-link" href="#">Imóveis</a>
                         <ul class="dropdown-menu" aria-labelledby="submenuLink">
                             <li><a class="dropdown-item" href="properties.html">Consultar Imóveis</a></li>
-                            <li id="menu-register-property"><a class="dropdown-item" href="new-property.html">Registar Imóvel</a></li>
+                            <li id="menu-register-property"><a class="dropdown-item" href="new-property.html">Registar
+                                Imóvel</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#about">Sobre Nós</a></li>
@@ -75,18 +76,28 @@
 </section>
 
 <!-- Sobre Nós -->
-<section id="about" class="bg-light py-5">
-    <div class="container text-center">
-        <h2>Sobre Nós</h2>
-        <p>Somos a Imovix, uma agência imobiliária dedicada a encontrar o imóvel ideal para você.</p>
+<section id="about" class="d-flex align-items-center p-3">
+    <div class="container text-center py-5">
+        <h2 class="text-center mb-5">A nossa equipa</h2>
+        <img src="images/author.jpg" alt="Author Photo" class="img-fluid author-photo">
+        <p>Olá! Sou o Rui Félix, um programador apaixonado por criar soluções tecnológicas inovadoras.</p>
+        <p>Com uma sólida formação em Informática e Multimédia e experiência prática em desenvolvimento frontend
+            e backend, dedico-me a projetar sistemas que resolvem problemas reais.</p>
+        <a href="authors.html" class="btn btn-primary">Saiba mais</a>
     </div>
-    <video muted src="video/background-video.mp4" class="object-fit-scale" autoplay></video>
 </section>
 
 <!-- Contacto -->
 <section id="contact" class="py-5">
     <div class="container">
         <h2 class="text-center mb-4">Contacto</h2>
+        <div class="row">
+            <h4>Morada:</h4>
+            <p>Av. do Empresário ,Campus da Talagueira,<br>Zona do Lazer<br>6000-767 Castelo Branco</p>
+            <h4>Telefone:</h4>
+            <p>272339300</p>
+        </div>
+        <hr>
         <form>
             <div class="row">
                 <div class="col-md-6">
@@ -113,6 +124,14 @@
         <p id="contact-message" style="margin-top: 1rem;"></p>
     </div>
 </section>
+
+<div >
+    <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3064.441811316813!2d-7.514959587105643!3d39.81951097142316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd3d5ea6bb2280e1%3A0x1c460157bc4b46c8!2sEscola%20Superior%20de%20Tecnologia%20-%20Instituto%20Polit%C3%A9cnico%20de%20Castelo%20Branco!5e0!3m2!1spt-PT!2spt!4v1734892783938!5m2!1spt-PT!2spt"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
 
 <!-- Footer -->
 <footer class="bg-dark text-white text-center py-4">

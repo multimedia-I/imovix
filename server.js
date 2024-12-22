@@ -44,7 +44,7 @@ app.get("/api/typologies", (req, res) => {
 
 // Imóveis em destaque
 app.get("/api/highlights", (req, res) => {
-    const query = "SELECT id, title, short_description, price, thumbnail_path FROM properties";
+    const query = "SELECT id, title, short_description, price, thumbnail_path FROM properties WHERE highlight_status = 1";
     db.query(query, (err, results) => {
         if (err) return res.status(500).send("Erro ao carregar imóveis.");
         res.json(results);
