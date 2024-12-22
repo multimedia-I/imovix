@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const openPhotoGallery = (photos, startIndex) => {
         const carouselInner = document.getElementById("carousel-images");
-        carouselInner.innerHTML = ""; // Limpa o carousel antes de renderizar
+        carouselInner.innerHTML = "";
 
         photos.forEach((photo, index) => {
             const isActive = index == startIndex ? "active" : "";

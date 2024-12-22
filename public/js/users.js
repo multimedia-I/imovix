@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loginIcon.addEventListener("click", (e) => {
             e.preventDefault();
             localStorage.removeItem("token");
-            window.location.reload();
+            window.location.href = "index.html"
         });
         menuRegisterProperty.style.display = "block";
     } else {

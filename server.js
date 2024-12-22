@@ -150,7 +150,7 @@ app.post("/api/login", (req, res) => {
 // Upload Fotos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const tempPath = "uploads/temp";
+        const tempPath = `public/uploads/temp/`;
         fs.mkdirSync(tempPath, { recursive: true });
         cb(null, tempPath);
     },
@@ -162,14 +162,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Novo Imovel
-app.post("/api/new-property", upload.array("fotos", 5), (req, res) => {
-    const { title, description, price, typology_id } = req.body;
+app.post("/api/new-property", upload.array("photos", 5), (req, res) => {
+    const { title, short_description, description, price, typology_id } = req.body;
 
-    if (!title || !description || !price || !typology_id) {
+    if (!title || !short_description || !description || !price || !typology_id) {
         return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios." });
     }
 
-    const sql = "INSERT INTO properties (title, short_description, description, price, typology_id) VALUES (?, ?, ?, ?)";
+    const sql = "INSERT INTO properties (title, short_description, description, price, typology_id) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [title, short_description, description, price, typology_id], (err, result) => {
         if (err) {
             console.error(err);
@@ -177,17 +177,27 @@ app.post("/api/new-property", upload.array("fotos", 5), (req, res) => {
         }
 
         const propertyId = result.insertId;
+        let finalPath;
+        const destDir = `public/uploads/property${propertyId}`;
+        if (!fs.existsSync(destDir)) {
+            fs.mkdirSync(destDir, { recursive: true });
+        }
 
         const photos = req.files.map(file => {
-            const newPath = `uploads/property${propertyId}/${path.basename(file.path)}`;
-            fs.renameSync(file.path, newPath);
-            return newPath;
+            finalPath = path.join(destDir, file.filename);
+            fs.rename(file.path, finalPath, (err) => {
+                if (err) {
+                    console.error("Erro ao mover arquivo:", err);
+                    return res.status(500).json({ message: "Erro ao salvar o arquivo" });
+                }
+            });
         });
 
         const photoSql = "INSERT INTO photos (property_id, photo_path) VALUES ?";
-        const photoValues = photos.map(photo => [propertyId, photo]);
+        const photoValues = photos.map(photo => [propertyId, finalPath.replace("public/", "")]);
 
         db.query(photoSql, [photoValues], (err) => {
+            console.info("Property: " + JSON.stringify(propertyId) + "\nPhotos path: " + photoValues);
             if (err) {
                 console.error(err);
                 return res.status(500).json({ success: false, message: "Erro ao guardar fotos." });

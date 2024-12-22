@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (data.success) {
                         propertyMessage.textContent = "Imóvel registado com sucesso!";
                         propertyMessage.style.color = "green";
+                        propertyForm.style.display = "none";
                         propertyForm.reset();
                     } else {
                         propertyMessage.textContent = "Erro: " + data.message;
