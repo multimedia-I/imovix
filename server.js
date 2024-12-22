@@ -57,7 +57,6 @@ app.get("/api/properties", (req, res) => {
         SELECT p.id, p.title, p.description, t.typology AS typology, p.price 
         FROM properties p
         LEFT JOIN typologies t ON p.typology_id = t.id
-        LEFT JOIN photos f ON p.id = f.property_id
         GROUP BY p.id, t.typology;
     `;
     db.query(query, (err, results) => {
@@ -65,6 +64,22 @@ app.get("/api/properties", (req, res) => {
         res.json(results);
     });
 });
+
+//Lista filtrada de imoveis
+app.get("/api/properties?typology_id=:id", (req, res) => {
+    const query = `
+        SELECT p.id, p.title, p.description, t.typology AS typology, p.price 
+        FROM properties p
+        LEFT JOIN typologies t ON p.typology_id = t.id
+        WHERE t.id = ${req.params.typology_id}
+        GROUP BY p.id, t.typology;
+    `;
+    db.query(query, (err, results) => {
+        if (err) return res.status(500).json({ error: "Erro ao carregar imóveis" });
+        res.json(results);
+    });
+});
+
 
 // Detalhes do imovel
 app.get("/api/properties/:id", (req, res) => {
@@ -169,8 +184,10 @@ app.post("/api/new-property", upload.array("photos", 5), (req, res) => {
         return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios." });
     }
 
-    const sql = "INSERT INTO properties (title, short_description, description, price, typology_id) VALUES (?, ?, ?, ?, ?)";
-    db.query(sql, [title, short_description, description, price, typology_id], (err, result) => {
+    const userId = req.user.id;
+
+    const sql = "INSERT INTO properties (title, short_description, description, price, typology_id, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+    db.query(sql, [title, short_description, description, price, typology_id, userId], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ success: false, message: "Erro ao registar o imóvel." });
@@ -183,21 +200,17 @@ app.post("/api/new-property", upload.array("photos", 5), (req, res) => {
             fs.mkdirSync(destDir, { recursive: true });
         }
 
-        const photos = req.files.map(file => {
-            finalPath = path.join(destDir, file.filename);
-            fs.rename(file.path, finalPath, (err) => {
-                if (err) {
-                    console.error("Erro ao mover arquivo:", err);
-                    return res.status(500).json({ message: "Erro ao salvar o arquivo" });
-                }
-            });
+        const photoValues = [];
+
+        req.files.forEach(file => {
+            const finalPath = path.join(destDir, file.filename);
+            fs.renameSync(file.path, finalPath);
+            photoValues.push([propertyId, finalPath.replace("public/", "")]);
         });
 
         const photoSql = "INSERT INTO photos (property_id, photo_path) VALUES ?";
-        const photoValues = photos.map(photo => [propertyId, finalPath.replace("public/", "")]);
 
         db.query(photoSql, [photoValues], (err) => {
-            console.info("Property: " + JSON.stringify(propertyId) + "\nPhotos path: " + photoValues);
             if (err) {
                 console.error(err);
                 return res.status(500).json({ success: false, message: "Erro ao guardar fotos." });

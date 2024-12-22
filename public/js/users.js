@@ -21,7 +21,6 @@ const menuRegisterProperty = document.getElementById("menu-register-property");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-
     // Abrir pop-up
     const openPopup = (popup) => {
         overlay.style.display = "block";

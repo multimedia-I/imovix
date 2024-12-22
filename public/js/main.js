@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Carregar lista de tipologias de imoveis em properties.html
     const loadTypologies = () => {
-        fetch("http://localhost:3000/api/typologies") // Endpoint para buscar as tipologias
+        fetch("http://localhost:3000/api/typologies")
             .then(response => response.json())
             .then(typologies => {
                 typologies.forEach(typology => {
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ).join("");
 
                     const formatedPrice = formatPrice(property.price);
-                    // Estrutura de cada card de propriedade
+                    // Estrutura de cada card de imovel
                     const card = `
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
         filterForm.addEventListener("submit", (e) => {
             e.preventDefault();
             const typologyId = typologySelect.value;
-            loadProperties(typologyId); // Recarrega imóveis filtrados
+            loadProperties(typologyId);
         });
     }
 
