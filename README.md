@@ -1,4 +1,4 @@
-<img src="https://ipcb.pt/sites/default/files/ipcb_estcb.svg" style="height:10%"/>
+<img src="https://ipcb.pt/media/4joj0kgw/logo-upcb.svg" style="height:10%"/>
 <h1>Imovix - Agência Imobiliária</h1>
 <h3>Trabalho Final - Multimédia 1</h3>
 <h5>Licenciatura em Informática e Multimédia</h5>
@@ -30,3 +30,8 @@ propriedades e dados de usuários para maximizar a segurança dos dados registad
 <hr>
 <h4>Frameworks</h4>
 <p>Bootstrap</p>
+<h4>Iniciar Projeto</h4>
+<p>1. Criar BD com os scripts disponibilizados na pasta database</p>
+<p>2. Iniciar projeto com comando <i>npm start</i> (Necessita Nodejs e NPM instalado</p>
+
+
